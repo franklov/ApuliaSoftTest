@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ApuliaSoftTest</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var requests = {"project": false, "employee": false};
+            var cmds = new Array();
+
+            function checkButtons()
+            {
+                if (requests["project"]) {
+                    document.getElementById("addProject").style = "display: none;";
+                    document.getElementById("removeProject").style = "display: block;";
+                } else {
+                    document.getElementById("addProject").style = "display: block;";
+                    document.getElementById("removeProject").style = "display: none;";
+                }
+                
+                if (requests["employee"]) {
+                    document.getElementById("addEmployee").style = "display: none;";
+                    document.getElementById("removeEmployee").style = "display: block;";
+                } else {
+                    document.getElementById("addEmployee").style = "display: block;";
+                    document.getElementById("removeEmployee").style = "display: none;";
+                }
+            }
+
+            function updateFilters()
+            {
+                let container = document.getElementById("filters");
+                container.innerHTML = "";
+                for (const e of cmds) {
+                    container.innerHTML += "<li>" + e + "</li>";
+                }
+            }
+
+            function updateTable(data)
+            {
+                let container = document.getElementById("tableData");
+                container.innerHTML = "";
+                let table = "<table style='border: 1px solid black;'>";
+                for (const r of data)
+                {
+                    table += "<tr>";
+                    for (const e in r)
+                    {
+                        table += "<td style='padding: 5px; border: 1px solid black;'>" + r[e] + "</td>";
+                    }
+                    table += "</tr>";
+                }
+                table += "</table>";
+
+                container.innerHTML = table;
+            }
+
+            const req = async () => {
+                const response = await fetch(
+                    'http://localhost:5000/data',
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(cmds),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                    const content = await response.json();
+                    console.log("Done");
+                    console.log(content);
+                    checkButtons();
+                    updateFilters();
+                    updateTable(JSON.parse(content));
+            }
+
+            function addProject() {
+                if (requests["project"] == false) {
+                    requests["project"] = true;
+                    cmds.push("project");
+                }
+                req();
+            }
+
+            function removeProject() {
+                let index = cmds.indexOf("project");
+                if (index != -1) {
+                    cmds.splice(index,1);
+                }
+                requests["project"] = false;
+                req();
+            }
+
+            function addEmployee() {
+                if (requests["employee"] == false) {
+                    requests["employee"] = true;
+                    cmds.push("employee");
+                }
+                req();
+            }
+
+            function removeEmployee() {
+                let index = cmds.indexOf("employee");
+                if (index != -1) {
+                    cmds.splice(index,1);
+                }
+                requests["employee"] = false;
+                req();
+            }
+        </script>
+
+        <div>
+            <span>
+                Filters:<ol id="filters"></ol>
+            </span>
+
+            <span>
+                <button id="addProject" onclick="addProject()">Add project filter</button>
+                <button id="removeProject" onclick="removeProject()">Remove project filter</button>
+                <button id="addEmployee" onclick="addEmployee()">Add employee filter</button>
+                <button id="removeEmployee" onclick="removeEmployee()">Remove employee filter</button>
+            </span>
+        </div>
+        <div id="tableData">
+        </div>
+
+        <script type="text/javascript">
+            req();
+        </script>
+    </body>
+</html>

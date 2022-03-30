@@ -1,0 +1,48 @@
+@startuml
+
+interface Serializable {
+    --
+    + serialize() : dict
+    + {static} deserialize(data:dict) : Object
+}
+
+
+class Project implements Serializable {
+    - id: int
+    - name: str
+    --
+    + Project (id: int, name: str)
+    + getId(): int
+    + getName() : str
+}
+
+class Employee implements Serializable {
+    - id: int
+    - name: str
+    --
+    + Employee (id: int, name: str)
+    + getId() : int
+    + getName() : str
+}
+
+class WorkTime implements Serializable {
+    - project: Project
+    - employee: Employee
+    - day: datetime
+    - hours: int
+    --
+    + {static} sumWorkTimes(workTimes: list[WorkTime]) : int
+    + {static} getProjects(workTimes: list[WorkTime]) : list[Project]
+    + {static} getEmployees(workTimes: list[WorkTime]) : list[Employee]
+    + {static} getDates(workTimes: list[WorkTime]) : list[date]
+    + WorkTime (project: Project, employee: Employee, day: str, hours: int)
+    + getProject() : Project
+    + getEmployee() : Employee
+    + getDay() : datetime
+    + getHours() : int
+}
+
+WorkTime "1" o-- Project
+WorkTime "1" o-- Employee
+
+@enduml

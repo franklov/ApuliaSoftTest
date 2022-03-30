@@ -1,0 +1,53 @@
+@startuml
+
+class CommandExecuter {
+    - commands: list[GroupCommand]
+    --
+    + addCommand(GroupCommand) : void
+    + executeCommands(workTimes: list[WorkTime]) : list[Group]
+}
+
+class Group {
+    - groups: dict[str, str]
+    - data: list[WorkTime]
+    --
+    + Group(groups: dict[str,str] = {}, data: list[WorkTime] = [])
+    + addData(workTime: WorkTime): void
+    + getGroups(): dict[str, str]
+    + getData() : list[WorkTime]
+}
+
+interface GroupCommand {
+    --
+    + execute(groups: list[Group]): list[Group]
+}
+
+class GroupByProject implements GroupCommand {}
+class GroupByEmployee implements GroupCommand {}
+class GroupByDate implements GroupCommand {}
+
+@enduml
+
+
+[
+    {
+        "groups": [],
+        "data" : [workdata]
+    }
+]
+
+
+[
+    {
+        "groups": [
+            "project": "Prj1"
+        ],
+        "data": [workdata]
+    },
+    {
+        "groups": [
+            "project": "Prj2"
+        ],
+        "data" : [workdata]
+    }
+]

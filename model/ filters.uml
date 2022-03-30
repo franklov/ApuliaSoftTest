@@ -1,0 +1,33 @@
+@startuml
+
+interface Criteria {
+    --
+    + meetCriteria(workTimes: list[WorkTime]) : list[WorkTime]
+}
+
+class AndCriteria implements Criteria {
+    - criteria1: Criteria
+    - criteria2: Criteria
+    --
+    + Criteria(criteria1: Criteria, criteria2: Criteria)
+}
+
+class ProjectCriteria implements Criteria {
+    - project: Project
+    --
+    + ProjectCriteria (project: Project)
+}
+
+class EmployeeCriteria implements Criteria {
+    - employee: Employee
+    --
+    + EmployeeCriteria (employee: Employee)
+}
+
+class DateCriteria implements Criteria {
+    - day: date
+    --
+    + DateCriteria (day: date)
+}
+
+@enduml
